@@ -1,0 +1,139 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block css_files%}
+<link rel= "stylesheet" type= "text/css" href= "{% static 'styles/tracker.css' %}">
+{% endblock %}
+
+{% block content %}
+        <main>
+            <div class="main__cards">
+            <div class="card" style="border-left: .25rem solid #4e73df!important;">
+                <div class="card_inner">
+                <p class="text-primary-p">TOTAL ENTRIES
+                </p>
+                <span class="font-bold text-title">{{total_entries}}</span>
+                </div>
+            </div>
+
+            <div class="card" style="border-left: .25rem solid #1cc88a!important;;">
+                <div class="card_inner">
+                <p class="text-primary-p">STREAK</p>
+                <span class="font-bold text-title">{{streak}}</span>
+                </div>
+            </div>
+
+            <div class="card" style="border-left: .25rem solid #36b9cc!important;">
+                <div class="card_inner">
+                <p class="text-primary-p">MOOD CHANGE</p>
+                <span class="font-bold text-title">{{sentimental_change}}</span>
+                </div>
+            </div>
+
+            <div class="card" style="border-left: .25rem solid #f6c23e!important;">
+                <div class="card_inner">
+                <p class="text-primary-p">AVG MOOD Pattern</p>
+                <span class="font-bold text-title">{{avg_sentimental}}</span>
+                </div>
+            </div>
+            </div>
+            <!-- MAIN CARDS ENDS HERE -->
+
+            <!-- CHARTS STARTS HERE -->
+            <div class="charts">
+                <div class="charts__left">
+                    <div class="charts__right__title">
+                        <div>
+                            <h1>Today's Day Description
+                                
+                            </h1>
+                        </div>
+                        <a  href="{% url 'tracker-form'%}" class="btn btn--sub btn--lg">Day Description </a>
+                    </div>
+          
+                    <div class="charts__right__cards" >
+                          <div class="card1">
+                            <h3>{{latest_subject}}</h3>
+                            <p>{{lastest_desc}}</p>
+                            
+                          </div>
+                          
+                    </div> 
+                    <a   href="{% url 'trackerDescriptions'%}" style="    padding-top: 2%;
+                margin-top: 2%;
+                justify-items: center;
+                text-align: center;
+                float: right;
+                margin-bottom: 2%;" class="btn btn--sub btn--lg">See all Day Descriptions </a>
+            </div>
+
+            <div class="charts__right">
+                <div class="charts__right__title">
+                <div>
+                    <h1>Tracker Trend</h1>
+                </div>
+                </div>
+                <div id="apex1">
+                    <canvas id="myChart" style="width:50%;max-width:100%"></canvas>
+                </div>
+            </div>
+            </div>
+                
+        </main>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script>
+    var dates = [];
+    var sentiment_values = [];
+
+    "{% for val in sentiment_values %}"
+    sentiment_values.push("{{val}}");
+    "{% endfor %}"
+
+    "{% for val in dates %}"
+    dates.push("{{val}}");
+    "{% endfor %}"
+    new Chart("myChart", {
+      type: "line",
+      data: {
+        labels: dates,
+        datasets: [{
+            lineTension: 0.3,
+            backgroundColor: "rgba(78, 115, 223, 0.05)",
+            borderColor: "rgba(78, 115, 223, 1)",
+            pointRadius: 3,
+            pointBackgroundColor: "rgba(78, 115, 223, 1)",
+            pointBorderColor: "rgba(78, 115, 223, 1)",
+            pointHoverRadius: 3,
+            pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+            pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+            pointHitRadius: 10,
+            pointBorderWidth: 2,
+            data: sentiment_values
+            }],
+        },
+      options: {
+        legend: {display: false},
+        scales: {
+            
+            yAxes: [{
+            scaleLabel: {
+                display: true,
+                labelString: 'MOOD'
+                }
+            }],
+            xAxes: [{
+            scaleLabel: {
+                display: true,
+                labelString: 'Dates'
+                }
+            }],
+            
+        }
+
+      }
+    });
+
+    </script>
+{% endblock %}
